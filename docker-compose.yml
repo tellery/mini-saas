@@ -1,0 +1,44 @@
+version: "3.9"
+services:
+  server1:
+    image: "mini-saas-server"
+    ports:
+      - "8080:8080"
+    networks:
+      - envoymesh
+    environment:
+      "server.id": "1"
+      "server.port": "8080"
+
+  server2:
+    image: "mini-saas-server"
+    ports:
+      - "7070:7070"
+    networks:
+      - envoymesh
+    environment:
+      "server.id": "2"
+      "server.port": "7070"
+
+  client:
+    image: "mini-saas-client"
+    ports:
+      - "8081:8081"
+    networks:
+      - envoymesh
+
+  envoy:
+    image: "envoyproxy/envoy-dev:ad63b1c385fe95ddd6d547a43583904c1f459abe"
+    ports:
+      - "9901:9901"
+      - "10000:10000"
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    networks:
+      - envoymesh
+    command:
+     - "--component-log-level http:debug,http2:debug,grpc:debug,matcher:debug,router:debug,filter:debug"
+     - "-c /etc/envoy/envoy.yaml"
+
+networks:
+  envoymesh: { }

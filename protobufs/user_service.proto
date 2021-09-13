@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package mini.saas.grpc;
+option java_package = "io.iftech.data.user";
+option java_outer_classname = "UserServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+service UserService {
+  rpc GetUserProfile (google.protobuf.Empty) returns (GetUserProfileResponse);
+}
+
+message GetUserProfileResponse {
+  string name = 1;
+  string age = 2;
+  string city = 3;
+}
