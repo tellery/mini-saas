@@ -28,17 +28,28 @@ services:
       - envoymesh
 
   envoy:
-    image: "envoyproxy/envoy-dev:ad63b1c385fe95ddd6d547a43583904c1f459abe"
+    image: "envoyproxy/envoy:v1.19-latest"
     ports:
-      - "9901:9901"
-      - "10000:10000"
+      - 9901:9901
+      - 10000:10000
     volumes:
-      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+      # - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+      - ./envoy/bootstrap.yaml:/etc/envoy/bootstrap.yaml
     networks:
       - envoymesh
     command:
-     - "--component-log-level http:debug,http2:debug,grpc:debug,matcher:debug,router:debug,filter:debug"
-     - "-c /etc/envoy/envoy.yaml"
+      - "--component-log-level http:debug,http2:debug,grpc:debug,matcher:debug,router:debug,filter:debug"
+      - "-c /etc/envoy/bootstrap.yaml"
+
+  envoy-xds-server:
+    image: "envoy-xds-server"
+    ports:
+      - "18000:18000"
+    networks:
+      - envoymesh
+    command:
+      - "--nodeID=envoy-proxy"
+      - "-debug"
 
 networks:
-  envoymesh: { }
+  envoymesh: {}

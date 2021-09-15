@@ -1,0 +1,9 @@
+module github.com/tellery/saas-xds-server
+
+go 1.16
+
+require (
+	github.com/envoyproxy/go-control-plane v0.9.9
+	github.com/golang/protobuf v1.4.3
+	google.golang.org/grpc v1.36.0
+)
