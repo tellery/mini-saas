@@ -1,8 +1,6 @@
 package kubernetes
 
 import (
-	"fmt"
-
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/tellery/saas-xds-server/pkg/constant"
@@ -76,7 +74,7 @@ func svcToUserServer(svc *corev1.Service) *entity.UserServer {
 	}
 	return &entity.UserServer{
 		UserId:      userId,
-		ServiceName: fmt.Sprintf("%s.dev.svc.cluster.local", svc.Name),
+		ServiceName: svc.Name,
 		ServicePort: uint32(svc.Spec.Ports[0].Port),
 	}
 }
