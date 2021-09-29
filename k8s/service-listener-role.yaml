@@ -1,0 +1,41 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app: tellery-service-listener
+  name: tellery-service-listener
+  namespace: mosaic-beta
+subjects:
+- kind: ServiceAccount
+  name: tellery-service-listener
+  namespace: mosaic-beta
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: tellery-service-listener
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app: tellery-service-listener
+  name: tellery-service-listener
+  namespace: mosaic-beta
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tellery-service-listener
+  namespace: mosaic-beta

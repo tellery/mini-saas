@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envoy-xds-server
+  namespace: mosaic-beta
+  labels:
+    app: envoy-xds-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: envoy-xds-server
+  template:
+    metadata:
+      labels:
+        app: envoy-xds-server
+    spec:
+      serviceAccountName: tellery-service-listener
+      containers:
+        - name: xds-server
+          image: registry.jellow.site/iftech/envoy-xds-server:master-a76a8b5
+          ports:
+            - name: grpc
+              containerPort: 18000
+              protocol: TCP
+          resources: {}
+          args:
+            - "-nodeId=tellery-envoy-proxy"
+            - "-namespace=mosaic-beta"
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: envoy-xds-server
+  namespace: mosaic-beta
+  labels:
+    app: envoy-xds-server
+spec:
+  selector:
+    app: envoy-xds-server
+  ports:
+    - port: 18000
+      targetPort: 18000
